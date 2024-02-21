@@ -113,7 +113,7 @@ mysqlPass = "senha"
 mysqlDatabase = "database"
 mysqlPort = 3306
 mysqlSock = ""
-passwordType = sha1
+passwordType = "sha1"
 
 -- Misc.
 allowChangeOutfit = true
