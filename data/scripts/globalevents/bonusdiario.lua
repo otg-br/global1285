@@ -60,7 +60,7 @@ function bonusTestWeek.onThink(interval)
 	BONUS_DIARIO_AMMOUNT = info.ammount
 	
 	
-	print("hoje é dia de "..BONUS_DIARIO_MSG..", "..BONUS_DIARIO_TIPO..", "..BONUS_DIARIO_AMMOUNT.."")
+	-----print("hoje é dia de "..BONUS_DIARIO_MSG..", "..BONUS_DIARIO_TIPO..", "..BONUS_DIARIO_AMMOUNT.."")
 	return true
 end
 
