@@ -279,7 +279,9 @@ private:
 
 	void sendTutorial(uint8_t tutorialId);
 	void sendAddMarker(const Position &pos, uint8_t markType, const std::string &desc);
-
+    
+	void sendSessionEndInformation(SessionEndInformations information);
+	
 	void sendTournamentLeaderboard();
 
 	void sendCyclopediaCharacterNoData(CyclopediaCharacterInfoType_t characterInfoType, uint8_t errorCode);
