@@ -305,35 +305,6 @@ void ProtocolGameBase::sendCreatureLight(const Creature* creature)
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGameBase::sendItemClasses()
-{
-	NetworkMessage msg;
-	msg.addByte(0x86);
-
-	// begin item classes block
-	uint8_t classSize = 4;
-	uint8_t tiersSize = 10;
-	msg.addByte(4); // number of item classes
-	for (uint8_t i = 0; i < classSize; i++) {
-		msg.addByte(i + 1); // class id
-
-		// begin tier block
-		msg.addByte(tiersSize); // tiers size
-		for (uint8_t j = 0; j < tiersSize; j++) {
-			msg.addByte(j); // tier id
-			msg.add<uint64_t>(10000); // upgrade cost
-		}
-		// end tier block
-	}
-	// end item classes block
-
-	// unknown
-	for (uint8_t i = 0; i < 11; i++) {
-		msg.addByte(0);
-	}
-	writeToOutputBuffer(msg);
-}
-
 void ProtocolGameBase::sendWorldLight(const LightInfo& lightInfo)
 {
 	NetworkMessage msg;
@@ -1600,10 +1571,7 @@ void ProtocolGameBase::sendAddCreature(const Creature* creature, const Position&
 	sendCreatureLight(creature);
 
 	sendVIPEntries();
-    
-	// tiers for forge and market
-	sendItemClasses();
-	
+
 	sendBasicData();
 	player->sendIcons();
 }
@@ -1999,16 +1967,6 @@ void ProtocolGameBase::AddPlayerStats(NetworkMessage& msg)
 
 	msg.add<uint32_t>(player->getFreeCapacity());
 	msg.add<uint32_t>(player->getCapacity());
-	
-	// fatal, dodge, momentum
-	msg.add<uint16_t>(0);
-	msg.add<uint16_t>(0);
-
-	msg.add<uint16_t>(0);
-	msg.add<uint16_t>(0);
-
-	msg.add<uint16_t>(0);
-	msg.add<uint16_t>(0);
 
 	msg.add<uint64_t>(player->getExperience());
 
