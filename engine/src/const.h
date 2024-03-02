@@ -687,7 +687,7 @@ enum NameEval_t : uint8_t {
 };
 
 // OTCv8 features (from src/client/const.h)
-enum GameFeature {
+enum GameFeature : uint8_t {
 	GameProtocolChecksum = 1,
 	GameAccountNames = 2,
 	GameChallengeOnLogin = 3,
