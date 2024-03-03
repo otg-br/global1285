@@ -439,6 +439,9 @@ private:
 	void updateAwareRange(int width, int height);
 	void sendAwareRange();
 
+	void parseNewPing(NetworkMessage& msg);
+	void sendNewPing(uint32_t pingId);
+
 	friend class Player;
 
 	// Helpers so we don't need to bind every time
