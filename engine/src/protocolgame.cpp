@@ -1091,6 +1091,8 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg)
 		if (outfitType == 0)
 		{
 			newOutfit.lookMount = msg.get<uint16_t>();
+			newOutfit.lookWings = otclientV8 ? msg.get<uint16_t>() : 0;
+			newOutfit.lookAura = otclientV8 ? msg.get<uint16_t>() : 0;
 			if (version >= 1200){
 				newOutfit.lookMountHead = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookMountBody = std::min<uint8_t>(132, msg.getByte());
@@ -1098,9 +1100,7 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg)
 				newOutfit.lookMountFeet = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookFamiliarsType = msg.get<uint16_t>();
 			}
-		}
-		else if (outfitType == 1)
-		{
+		} else if (outfitType == 1) {
 			//This value probably has something to do with try outfit variable inside outfit window dialog
 			//if try outfit is set to 2 it expects uint32_t value after mounted and disable mounts from outfit window dialog
 			newOutfit.lookMount = 0;
@@ -1112,8 +1112,13 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg)
 
 void ProtocolGame::parseToggleMount(NetworkMessage &msg)
 {
-	bool mount = msg.getByte() != 0;
-	addGameTask(&Game::playerToggleMount, player->getID(), mount);
+	int mount = msg.get<int8_t>();
+	int wings = -1, aura = -1;
+	if (otclientV8 >= 254) {
+		wings = msg.get<int8_t>();
+		aura = msg.get<int8_t>();
+	}
+	addGameTask(&Game::playerToggleOutfitExtension, player->getID(), mount, wings, aura);
 }
 
 void ProtocolGame::parseApplyImbuement(NetworkMessage &msg)
@@ -5215,6 +5220,34 @@ void ProtocolGame::sendOutfitWindow()
 		msg.addByte(mounted ? 0x01 : 0x00);
 	}
 
+	if (otclientV8) {
+		std::vector<const Wing*> wings;
+		for (const Wing& wing : g_game.wings.getWings()) {
+			if (player->hasWing(&wing)) {
+				wings.push_back(&wing);
+			}
+		}
+
+		msg.addByte(wings.size());
+		for (const Wing* wing : wings) {
+			msg.add<uint16_t>(wing->clientId);
+			msg.addString(wing->name);
+		}
+
+		std::vector<const Aura*> auras;
+		for (const Aura& aura : g_game.auras.getAuras()) {
+			if (player->hasAura(&aura)) {
+				auras.push_back(&aura);
+			}
+		}
+
+		msg.addByte(auras.size());
+		for (const Aura* aura : auras) {
+			msg.add<uint16_t>(aura->clientId);
+			msg.addString(aura->name);
+		}
+	}
+
 	writeToOutputBuffer(msg);
 }
 
@@ -5792,6 +5825,10 @@ void ProtocolGame::AddOutfit(NetworkMessage &msg, const Outfit_t &outfit, bool a
 	{
 		msg.add<uint16_t>(outfit.lookMount);
 	}
+	if (otclientV8) {
+		msg.add<uint16_t>(outfit.lookWings);
+		msg.add<uint16_t>(outfit.lookAura);
+	}
 }
 
 void ProtocolGame::addImbuementInfo(NetworkMessage &msg, uint32_t imbuid)
@@ -6185,6 +6222,7 @@ void ProtocolGame::sendFeatures()
 	features[GameExtendedOpcode] = true;
 	features[GameChangeMapAwareRange] = true;
 	features[GameExtendedClientPing] = true;
+	features[GameWingsAndAura] = true;
 
 	if (features.empty())
 		return;

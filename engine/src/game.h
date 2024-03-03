@@ -451,7 +451,7 @@ class Game
 		void playerPassPartyLeadership(uint32_t playerId, uint32_t newLeaderId);
 		void playerLeaveParty(uint32_t playerId);
 		void playerEnableSharedPartyExperience(uint32_t playerId, bool sharedExpActive);
-		void playerToggleMount(uint32_t playerId, bool mount);
+		void playerToggleOutfitExtension(uint32_t playerId, int mount, int wings, int aura);
 		void playerLeaveMarket(uint32_t playerId);
 		void playerBrowseMarket(uint32_t playerId, uint16_t spriteId);
 		void playerBrowseMarketOwnOffers(uint32_t playerId);
@@ -587,11 +587,13 @@ class Game
 		bool hasEffect(uint8_t effectId);
 		bool hasDistanceEffect(uint8_t effectId);
 
+		Auras auras;
 		Groups groups;
 		Map map;
 		Mounts mounts;
 		Raids raids;
 		GameStore gameStore;
+		Wings wings;
 
 		std::forward_list<Item*> toDecayItems;
 

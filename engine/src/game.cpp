@@ -283,6 +283,8 @@ void Game::setGameState(GameState_t newState)
 			raids.startup();
 
 			mounts.loadFromXml();
+			auras.loadFromXml();
+			wings.loadFromXml();
 
 			if (!g_config.getBoolean(ConfigManager::STOREMODULES)) {
 				gameStore.loadFromXml();
@@ -4823,14 +4825,15 @@ void Game::playerRequestOutfit(uint32_t playerId)
 	player->sendOutfitWindow();
 }
 
-void Game::playerToggleMount(uint32_t playerId, bool mount)
+void Game::playerToggleOutfitExtension(uint32_t playerId, int mount, int wings, int aura)
 {
 	Player* player = getPlayerByID(playerId);
 	if (!player) {
 		return;
 	}
 
-	player->toggleMount(mount);
+	if (mount != -1)
+		player->toggleMount(mount == 1);
 }
 
 void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit)
@@ -4847,6 +4850,8 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit)
 	const Outfit* playerOutfit = Outfits::getInstance().getOutfitByLookType(player->getSex(), outfit.lookType);
 	if (!playerOutfit) {
 		outfit.lookMount = 0;
+		outfit.lookWings = 0;
+		outfit.lookAura = 0;
 	}
 
 	if (outfit.lookMount != 0) {
@@ -8506,6 +8511,7 @@ bool Game::reload(ReloadTypes_t reloadType)
 			g_scripts->loadScripts("monster", false, true);
 			return true;
 		}
+		case RELOAD_TYPE_AURAS: return auras.reload();
 		case RELOAD_TYPE_CHAT: return g_chat->load();
 		case RELOAD_TYPE_CONFIG: return g_config.reload();
 		case RELOAD_TYPE_EVENTS: return g_events->load();
@@ -8519,7 +8525,7 @@ bool Game::reload(ReloadTypes_t reloadType)
 		}
 
 		case RELOAD_TYPE_RAIDS: return raids.reload() && raids.startup();
-
+		case RELOAD_TYPE_WINGS: return wings.reload();
 		case RELOAD_TYPE_SPELLS: {
 			if (!g_spells->reload()) {
 				std::cout << "[Error - Game::reload] Failed to reload spells." << std::endl;
@@ -8554,7 +8560,9 @@ bool Game::reload(ReloadTypes_t reloadType)
 			Item::items.reload();
 			g_weapons->clear(true);
 			g_weapons->loadDefaults();
+			auras.reload();
 			mounts.reload();
+			wings.reload();
 			g_events->load();
 			g_chat->load();
 			g_actions->clear(true);

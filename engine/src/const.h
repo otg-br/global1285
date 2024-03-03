@@ -660,6 +660,7 @@ enum PlayerCustomFlags : uint64_t {
 
 enum ReloadTypes_t : uint8_t  {
 	RELOAD_TYPE_ALL,
+	RELOAD_TYPE_AURAS,
 	RELOAD_TYPE_CHAT,
 	RELOAD_TYPE_COMMANDS,
 	RELOAD_TYPE_CONFIG,
@@ -675,6 +676,7 @@ enum ReloadTypes_t : uint8_t  {
 	RELOAD_TYPE_SCRIPTS,
 	RELOAD_TYPE_SPELLS,
 	RELOAD_TYPE_STAGES,
+	RELOAD_TYPE_WINGS,
 };
 
 enum NameEval_t : uint8_t {
@@ -824,6 +826,14 @@ static constexpr int32_t PSTRG_OUTFITS_RANGE_SIZE = 500;
 static constexpr int32_t PSTRG_MOUNTS_RANGE_START = (PSTRG_RESERVED_RANGE_START + 2001);
 static constexpr int32_t PSTRG_MOUNTS_RANGE_SIZE = 10;
 static constexpr int32_t PSTRG_MOUNTS_CURRENTMOUNT = (PSTRG_MOUNTS_RANGE_START + 10);
+//[2012 - 2022];
+static constexpr int32_t PSTRG_WINGS_RANGE_START = (PSTRG_RESERVED_RANGE_START + 2012);
+static constexpr int32_t PSTRG_WINGS_RANGE_SIZE = 10;
+static constexpr int32_t PSTRG_WINGS_CURRENTWINGS = (PSTRG_WINGS_RANGE_START + 10);
+//[2023 - 2033];
+static constexpr int32_t PSTRG_AURAS_RANGE_START = (PSTRG_RESERVED_RANGE_START + 2013);
+static constexpr int32_t PSTRG_AURAS_RANGE_SIZE = 10;
+static constexpr int32_t PSTRG_AURAS_CURRENTAURA = (PSTRG_AURAS_RANGE_START + 10);
 // [3000 - 3500];
 static constexpr int32_t PSTRG_FAMILIARS_RANGE_START = (PSTRG_RESERVED_RANGE_START + 3000);
 static constexpr int32_t PSTRG_FAMILIARS_RANGE_SIZE = 500;

@@ -162,6 +162,12 @@ void Signals::sighupHandler()
 	g_game.mounts.reload();
 	std::cout << "Reloaded mounts." << std::endl;
 
+	g_game.auras.reload();
+	std::cout << "Reloaded auras." << std::endl;
+
+	g_game.wings.reload();
+	std::cout << "Reloaded wings." << std::endl;
+
 	g_events->load();
 	std::cout << "Reloaded events." << std::endl;
 
