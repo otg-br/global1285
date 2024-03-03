@@ -975,7 +975,7 @@ bool ProtocolGame::canSee(int32_t x, int32_t y, int32_t z) const
 	int32_t offsetz = myPos.getZ() - z;
 	if ((x >= myPos.getX() - awareRange.left() + offsetz) && (x <= myPos.getX() + awareRange.right() + offsetz) &&
 		(y >= myPos.getY() - awareRange.top() + offsetz) && (y <= myPos.getY() + awareRange.bottom() + offsetz)) {
-		{
+		
 		return true;
 	}
 	return false;
